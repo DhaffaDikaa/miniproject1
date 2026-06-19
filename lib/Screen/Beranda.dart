@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/product_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'Detail.dart';
 
@@ -23,41 +25,6 @@ class _BerandaState extends State<Beranda> {
     {"title": "Herbs", "image": "assets/images/gc3(herbs).png"},
     {"title": "Veggies", "image": "assets/images/gc4(veggies).png"},
     {"title": "Diary", "image": "assets/images/gc5(diary).png"},
-  ];
-
-  final List<Map<String, dynamic>> products = [
-    {
-      "title": "Berries",
-      "image": "assets/images/berries.png",
-      "rating": "4.5",
-      "reviews": "672",
-      "desc": "Berries is a sweet fruit with red color.",
-      "isFavorite": false,
-    },
-    {
-      "title": "Tulsi",
-      "image": "assets/images/tulsi.png",
-      "rating": "4.9",
-      "reviews": "324",
-      "desc": "Leaf of berries is very green.",
-      "isFavorite": false,
-    },
-    {
-      "title": "Milk",
-      "image": "assets/images/milk.png",
-      "rating": "4.5",
-      "reviews": "672",
-      "desc": "Does chocolate milk come from brown cows?.",
-      "isFavorite": false,
-    },
-    {
-      "title": "Tomato",
-      "image": "assets/images/tomato.png",
-      "rating": "4.9",
-      "reviews": "324",
-      "desc": "Is tomato a fruit or a vegetable?",
-      "isFavorite": false,
-    },
   ];
 
   @override
@@ -156,8 +123,9 @@ class _BerandaState extends State<Beranda> {
               ),
 
               const SizedBox(height: 15),
-
-              GridView.builder(
+              BlocBuilder<ProductBloc,ProductState>(builder: (context,state){
+                if(state is ProductLoaded){
+                  return GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -166,12 +134,16 @@ class _BerandaState extends State<Beranda> {
                   mainAxisSpacing: 15,
                   childAspectRatio: 0.6,
                 ),
-                itemCount: products.length,
+                itemCount: state.products.length,
                 itemBuilder: (context, index) {
-                  final produk = products[index];
-                  return _buildProductCard(produk);
+                  final produk = state.products[index];
+                  return _buildProductCard(produk,index);
                 },
-              ),
+              );  
+                }
+                return const Center(child:CircularProgressIndicator());
+              },)
+              
             ],
           ),
         ),
@@ -242,15 +214,13 @@ class _BerandaState extends State<Beranda> {
     );
   }
 
-  Widget _buildProductCard(Map<String, dynamic> product) {
+  Widget _buildProductCard(Map<String, dynamic> product,int index) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Detail(produk: product)),
-        ).then((value) {
-          setState(() {});
-        });
+          MaterialPageRoute(builder: (context) => Detail(productIndex: index)),
+        );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -272,9 +242,7 @@ class _BerandaState extends State<Beranda> {
                 right: 8,
                 child: GestureDetector(
                   onTap: (){
-                    setState(() {
-                      product['isFavorite'] = !product['isFavorite'];
-                    });
+                    context.read<ProductBloc>().add(ToggleFavoriteEvent(index));
                   },
                   child: Container(
                     padding: const EdgeInsets.all(6),

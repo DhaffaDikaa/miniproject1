@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'Screen/Beranda.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'bloc/product_bloc.dart';
+import 'screen/Beranda.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/gestures.dart';
 
@@ -12,7 +14,9 @@ class MyApp extends  StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return BlocProvider(
+      create: (context) => ProductBloc()..add(LoadProductEvent()),
+    child :MaterialApp(
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {
           PointerDeviceKind.mouse,
@@ -28,6 +32,7 @@ class MyApp extends  StatelessWidget{
           textTheme: GoogleFonts.poppinsTextTheme(),
         ),
       home : const Beranda(),
+    ),
     );
   }
 }
