@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:miniproject1/models/product_model.dart';
 import '../bloc/product_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'Detail.dart';
@@ -48,6 +49,46 @@ class _BerandaState extends State<Beranda> {
 
               const SizedBox(height: 20),
 
+              BlocBuilder<ProductBloc, ProductState>(
+                builder: (context, state) {
+                  if (state is ProductLoaded && state.isOffline) {
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 15),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade50,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.red.shade300,
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.wifi_off_rounded,
+                            color: Colors.red,
+                            size: 22,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              state
+                                  .errorMessage, 
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
               _searchBar(),
 
               const SizedBox(height: 18),
@@ -214,7 +255,7 @@ class _BerandaState extends State<Beranda> {
     );
   }
 
-  Widget _buildProductCard(Map<String, dynamic> product,int index) {
+  Widget _buildProductCard(ProductModel product,int index) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -230,7 +271,7 @@ class _BerandaState extends State<Beranda> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Image.asset(
-                  product['image'],
+                  product.image,
                   height: 142,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -251,10 +292,10 @@ class _BerandaState extends State<Beranda> {
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
-                      product['isFavorite']
+                      product.isFavorite
                           ? Icons.favorite
                           : Icons.favorite_border,
-                      color: product['isFavorite'] ? Colors.red : Colors.white,
+                      color: product.isFavorite ? Colors.red : Colors.white,
                       size: 16,
                     ),
                   ),
@@ -266,7 +307,7 @@ class _BerandaState extends State<Beranda> {
           const SizedBox(height: 10),
 
           Text(
-            product['title'],
+            product.title,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
 
@@ -277,7 +318,7 @@ class _BerandaState extends State<Beranda> {
               const Icon(Icons.star, color: Colors.amber, size: 16),
               const SizedBox(width: 4),
               Text(
-                product['rating'],
+                product.rating,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
@@ -285,7 +326,7 @@ class _BerandaState extends State<Beranda> {
               ),
               const SizedBox(width: 4),
               Text(
-                '(${product['reviews']})',
+                '(${product.reviews})',
                 style: const TextStyle(color: Colors.grey, fontSize: 12),
               ),
             ],
@@ -294,7 +335,7 @@ class _BerandaState extends State<Beranda> {
           const SizedBox(height: 8),
 
           Text(
-            product['desc'],
+            product.desc,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(color: Colors.grey, fontSize: 12),

@@ -31,7 +31,7 @@ class _detailState extends State<Detail> {
                         bottomRight: Radius.circular(30),
                       ),
                       child: Image.asset(
-                        produk['image'],
+                        produk.image,
                         width: double.infinity,
                         height: 300,
                         fit: BoxFit.cover,
@@ -68,10 +68,10 @@ class _detailState extends State<Detail> {
                               child: CircleAvatar(
                                 backgroundColor: Colors.white.withOpacity(0.5),
                                 child: Icon(
-                                  produk['isFavorite']
+                                  produk.isFavorite
                                       ? Icons.favorite
                                       : Icons.favorite_border,
-                                  color: produk['isFavorite']
+                                  color: produk.isFavorite
                                       ? Colors.red
                                       : Colors.black,
                                   size: 22,
@@ -93,7 +93,7 @@ class _detailState extends State<Detail> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            produk['title'],
+                            produk.title,
                             style: const TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -108,7 +108,7 @@ class _detailState extends State<Detail> {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                produk['rating'],
+                                produk.rating,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -116,7 +116,7 @@ class _detailState extends State<Detail> {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                '(${produk['reviews']})',
+                                '(${produk.reviews})',
                                 style: const TextStyle(
                                   color: Colors.grey,
                                   fontSize: 14,
@@ -128,7 +128,7 @@ class _detailState extends State<Detail> {
                       ),
                       const SizedBox(height: 15),
                       Text(
-                        produk['desc'],
+                        produk.desc,
                         style: const TextStyle(
                           color: Colors.black87,
                           fontSize: 16,
